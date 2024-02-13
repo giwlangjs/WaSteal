@@ -4,7 +4,8 @@
   "description": "whatsapp pairingcode simple",
   "main": "index.js",
   "scripts": {
-    "test": "test.js"
+    "test": "test.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
