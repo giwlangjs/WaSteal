@@ -102,6 +102,30 @@ async function WaConnect() {
                     { quoted: m }
                 );
                 break;
+            case 'send':
+              const send = m.message.extendedTextMessage;
+              if (send && send.contextInfo && send.contextInfo.quotedMessage) {
+            const sendTypes = Object.keys(send.contextInfo.quotedMessage);
+            
+            if (sendTypes.includes("imageMessage")) {
+                const image = await fake('imageMessage', send.contextInfo.quotedMessage.imageMessage);
+                const imageBuffer = await downloadMediaMessage(image, "buffer", {}, {buffer: pino});
+                fs.writeFileSync('./db/image.jpg', imageBuffer);
+                socket.sendMessage(
+                    from,
+                    { image: { url: "./db/image.jpg" }, mimeType: "image/jpg", caption: '@gilangf3000' },
+                    { quoted: m }
+                );
+            } else if (sendTypes.includes("videoMessage")) {
+                const video = await fake('videoMessage', send.contextInfo.quotedMessage.videoMessage);
+                const videoBuffer = await downloadMediaMessage(video, "buffer", {}, {buffer: pino});
+                fs.writeFileSync('./db/video.mp4', videoBuffer);
+                socket.sendMessage(from, { video: { url: './db/video.mp4' }, mimetype: 'video/mp4', caption: '@gilangf3000'  });
+            } else {
+                reply('pesan itu ga bisa bg :v');
+            }
+        }
+              break;
             case 'steal': 
               const msg = m.message.extendedTextMessage;
               if (msg && msg.contextInfo && msg.contextInfo.quotedMessage) {
